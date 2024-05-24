@@ -1,0 +1,19 @@
+service: todo-app
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: eu-north-1
+  stage: dev
+  profile: serverless-local
+
+functions:
+  getTodo:
+    name: get-todo-${sls:stage}
+    description: Returns a single TODO
+    handler: functions/todo/get.handler
+    events:
+      - httpApi:
+          path: /todos/{id}
+          method: get
