@@ -9,11 +9,39 @@ provider:
   #profile: serverless-local
 
 functions:
-  getTodo:
-    name: get-todo-${sls:stage}
-    description: Returns a single TODO
-    handler: functions/todo/get.handler
+          
+  listTodos:
+    handler: functions/todo/list.handler
+    name: list-all-todos-${sls:stage}
+    description: Returns all TODOS
     events:
       - httpApi:
-          path: /todos/{id}
+          path: /todos
           method: get
+
+  getTodo:
+    handler: functions/todo/get.handler
+    name: get-todo-${sls:stage}
+    description: Returns a single TODO
+    events:
+      - httpApi:
+          path: /todo/{id}
+          method: get
+
+  createTodo:
+    handler: functions/todo/create.handler
+    name: create-todo-${sls:stage}
+    description: Creates a new TODO
+    events:
+      - httpApi:
+          path: /todo
+          method: post
+
+  deleteTodo:
+    handler: functions/todo/delete.handler
+    name: delete-todo-${sls:stage}
+    description: Deletes an existing TODO
+    events:
+      - httpApi:
+          path: /todo/{id}
+          method: delete
