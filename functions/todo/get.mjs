@@ -1,4 +1,4 @@
-import { db } from "../utils/db.mjs";
+import { db } from "../../utils/db.mjs";
 
 export const handler = async (event) => {
   return {
@@ -6,6 +6,7 @@ export const handler = async (event) => {
     body: JSON.stringify(
       {
         message: "SAMI Go Serverless v3.0!",
+        id: event.pathParameters.id,
         input: event,
       },
       null,
