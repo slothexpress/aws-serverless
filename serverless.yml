@@ -8,8 +8,16 @@ provider:
   stage: dev
   #profile: serverless-local
 
+package:
+  individually: true
+
 functions:
-          
+  
+  authFunction:
+    handler: functions/auth/authorizer.handler
+    name: authorizer-${sls:stage}
+    description: Custom authorizer function
+
   listTodos:
     handler: functions/todo/list.handler
     name: list-all-todos-${sls:stage}
@@ -32,6 +40,7 @@ functions:
     handler: functions/todo/create.handler
     name: create-todo-${sls:stage}
     description: Creates a new TODO
+    role: arn:aws:iam::655905758223:user/serverless-user
     events:
       - httpApi:
           path: /todo
@@ -45,3 +54,22 @@ functions:
       - httpApi:
           path: /todo/{id}
           method: delete
+
+
+resources:
+  Resources:
+    todosTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: todos
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+        BillingMode: "PAY_PER_REQUEST"
