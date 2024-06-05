@@ -6,18 +6,17 @@ provider:
   runtime: nodejs20.x
   region: eu-north-1
   stage: dev
-  #profile: serverless-local
-
-package:
-  individually: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:DeleteItem
+        - dynamodb:Query
+      Resource: "arn:aws:dynamodb:eu-north-1:*:table/todos"
 
 functions:
-  
-  authFunction:
-    handler: functions/auth/authorizer.handler
-    name: authorizer-${sls:stage}
-    description: Custom authorizer function
-
   listTodos:
     handler: functions/todo/list.handler
     name: list-all-todos-${sls:stage}
@@ -40,7 +39,6 @@ functions:
     handler: functions/todo/create.handler
     name: create-todo-${sls:stage}
     description: Creates a new TODO
-    role: arn:aws:iam::655905758223:user/serverless-user
     events:
       - httpApi:
           path: /todo
@@ -54,7 +52,6 @@ functions:
       - httpApi:
           path: /todo/{id}
           method: delete
-
 
 resources:
   Resources:
