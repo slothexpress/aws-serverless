@@ -1,16 +1,13 @@
 import { db } from "../../utils/db.mjs";
+import { response } from "../../utils/response.mjs";
 
 export const handler = async (event) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: "SAMI Go Serverless v3.0!",
-        id: event.pathParameters.id,
-        input: event,
-      },
-      null,
-      2
-    ),
+  const { id } = event.pathParameters;
+
+  const sampleTodo = {
+    id: id,
+    task: "Sami Shower!",
   };
+
+  return response(200, sampleTodo);
 };
