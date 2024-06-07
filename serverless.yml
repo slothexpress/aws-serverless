@@ -15,8 +15,16 @@ provider:
         - dynamodb:DeleteItem
         - dynamodb:Query
       Resource: "arn:aws:dynamodb:eu-north-1:*:table/todos"
+  httpApi:
+    authorizers:
+      customAuthorizer:
+        type: request
+        functionName: authorizerFunc
 
 functions:
+  authorizerFunc:
+    handler: functions/auth/authorizer.handler
+
   listTodos:
     handler: functions/todo/list.handler
     name: list-all-todos-${sls:stage}
@@ -52,6 +60,8 @@ functions:
       - httpApi:
           path: /todo/{id}
           method: delete
+          authorizer:
+            name: customAuthorizer 
 
 resources:
   Resources:

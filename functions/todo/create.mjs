@@ -26,7 +26,7 @@ export const handler = async (event) => {
     return {
       statusCode: 201,
       body: JSON.stringify({
-        message: "TODO created successfully: " + task,
+        message: "TODO created successfully!",
         item: params.Item,
       }),
     };
