@@ -6,15 +6,17 @@ provider:
   runtime: nodejs20.x
   region: eu-north-1
   stage: dev
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:DeleteItem
-        - dynamodb:Query
-      Resource: "arn:aws:dynamodb:eu-north-1:*:table/todos"
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:DeleteItem
+            - dynamodb:Query
+          Resource: "arn:aws:dynamodb:eu-north-1:*:table/todos"
   httpApi:
     authorizers:
       customAuthorizer:
@@ -61,7 +63,7 @@ functions:
           path: /todo/{id}
           method: delete
           authorizer:
-            name: customAuthorizer 
+            type: aws_iam
 
 resources:
   Resources:
