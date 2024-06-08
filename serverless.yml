@@ -1,4 +1,4 @@
-service: todo-app
+service: sami-todo-app
 frameworkVersion: '3'
 
 provider:
@@ -17,6 +17,10 @@ provider:
             - dynamodb:DeleteItem
             - dynamodb:Query
           Resource: "arn:aws:dynamodb:eu-north-1:*:table/todos"
+        - Effect: Allow
+          Action:
+            - events:PutEvents
+          Resource: "arn:aws:events:eu-north-1:655905758223:event-bus/default"
 
 functions:
 
@@ -56,6 +60,18 @@ functions:
           path: /todo/{id}
           method: delete
 
+  logCreateTodo:
+    handler: functions/log/logger.handler
+    name: log-create-todo-${sls:stage}
+    description: Logs todo creation
+    events:
+      - eventBridge:
+          #eventBus: best-event-bus
+          #name: log-create-todo-rule 
+          pattern:
+            source:
+              - "todo.put"
+
 resources:
   Resources:
 
@@ -74,8 +90,3 @@ resources:
           - AttributeName: sk
             KeyType: RANGE
         BillingMode: "PAY_PER_REQUEST"
-
-    logEventBus:
-      Type: AWS::Events::EventBus
-      Properties:
-        Name: log-event-bus
