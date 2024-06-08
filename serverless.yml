@@ -17,15 +17,8 @@ provider:
             - dynamodb:DeleteItem
             - dynamodb:Query
           Resource: "arn:aws:dynamodb:eu-north-1:*:table/todos"
-  httpApi:
-    authorizers:
-      customAuthorizer:
-        type: request
-        functionName: authorizerFunc
 
 functions:
-  authorizerFunc:
-    handler: functions/auth/authorizer.handler
 
   listTodos:
     handler: functions/todo/list.handler
@@ -62,11 +55,10 @@ functions:
       - httpApi:
           path: /todo/{id}
           method: delete
-          authorizer:
-            type: aws_iam
 
 resources:
   Resources:
+
     todosTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -82,3 +74,8 @@ resources:
           - AttributeName: sk
             KeyType: RANGE
         BillingMode: "PAY_PER_REQUEST"
+
+    logEventBus:
+      Type: AWS::Events::EventBus
+      Properties:
+        Name: log-event-bus

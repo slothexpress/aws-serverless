@@ -12,11 +12,13 @@ export const handler = async (event) => {
       };
     }
 
+    const id = uuidv4();
+
     const params = {
       TableName: "todos",
       Item: {
         pk: "TODO",
-        sk: uuidv4(),
+        sk: id,
         task: task,
       },
     };
